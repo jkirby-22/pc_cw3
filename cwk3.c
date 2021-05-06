@@ -59,47 +59,24 @@ int main( int argc, char **argv )
     printf( "Original matrix (only top-left shown if too large):\n" );
     displayMatrix( hostMatrix, nRows, nCols );
 
+    //create buffers
     cl_mem device_oldMatrix = clCreateBuffer( context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, nRows*nCols*sizeof(float), hostMatrix, &status );
   	cl_mem device_newMatrix = clCreateBuffer( context, CL_MEM_WRITE_ONLY, nRows*nCols*sizeof(float), NULL, &status );
 
     cl_kernel kernel = compileKernelFromFile( "cwk3.cl", "matrixTranspose", context, device );
 
+    //set kernel arguments
     status = clSetKernelArg( kernel, 0, sizeof(cl_mem), &device_oldMatrix );
     status = clSetKernelArg( kernel, 1, sizeof(cl_mem), &device_newMatrix );
     status = clSetKernelArg( kernel, 2, sizeof(int), &nRows );
     status = clSetKernelArg( kernel, 3, sizeof(int), &nCols );
 
-    size_t indexSpaceSize[2] = {nRows, nCols};
-    //size_t workGroupSize[2] = ;
 
+
+    size_t indexSpaceSize[2] = {nRows, nCols};
+    //let automatic handling of work group size to ensure compatibility with index space size
   	status = clEnqueueNDRangeKernel( queue, kernel, 2, 0, indexSpaceSize, NULL, 0, NULL, NULL );
     status = clEnqueueReadBuffer( queue, device_newMatrix, CL_TRUE, 0, nRows*nCols*sizeof(float), hostMatrix, 0, NULL, NULL );
-    //serial
-    /*
-    float *newMatrix = (float*) malloc( nRows*nCols*sizeof(float) );
-
-    for (int i = 0; i < nRows; i++)
-    {
-      for (int j = 0; j < nCols; j++)
-      {
-        newMatrix[(j * nRows) + i] = hostMatrix[(i * nCols) + j];
-      }
-    }
-    */
-
-    //
-    // Transpose the matrix on the GPU.
-    //
-
-
-    // ...
-
-
-    //
-    // Display the final result. This assumes that the transposed matrix was copied back to the hostMatrix array
-    // (note the arrays are the same total size before and after transposing - nRows * nCols - so there is no risk
-    // of accessing unallocated memory).
-    //
 
     printf( "Transposed matrix (only top-left shown if too large):\n" );
     displayMatrix( hostMatrix, nCols, nRows );
@@ -110,6 +87,10 @@ int main( int argc, char **argv )
     //
     clReleaseCommandQueue( queue   );
     clReleaseContext     ( context );
+    clReleaseKernel      ( kernel  );
+
+    clReleaseMemObject( device_oldMatrix );
+    clReleaseMemObject( device_newMatrix );
 
     free( hostMatrix );
 
