@@ -87,7 +87,6 @@ int main( int argc, char **argv )
 
 
     size_t indexSpaceSize[2] = {nRows, nCols};
-    //size_t workGroupSize[2] = {2,2};
     //let automatic handling of work group size to ensure compatibility with index space size
   	status = clEnqueueNDRangeKernel( queue, kernel, 2, NULL, indexSpaceSize, NULL, 0, NULL, NULL );
     status = clEnqueueReadBuffer( queue, device_newMatrix, CL_TRUE, 0, nRows*nCols*sizeof(float), hostMatrix, 0, NULL, NULL );
