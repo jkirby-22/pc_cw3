@@ -53,7 +53,6 @@ int main( int argc, char **argv )
     // Allocate memory for the matrix.
     float *hostMatrix = (float*) malloc( nRows*nCols*sizeof(float) );
 
-
     // Fill the matrix with random values, and display.
     fillMatrix( hostMatrix, nRows, nCols );
     printf( "Original matrix (only top-left shown if too large):\n" );
@@ -84,8 +83,6 @@ int main( int argc, char **argv )
     status = clSetKernelArg( kernel, 2, sizeof(int), &nRows );
     status = clSetKernelArg( kernel, 3, sizeof(int), &nCols );
 
-
-
     size_t indexSpaceSize[2] = {nRows, nCols};
     //let automatic handling of work group size to ensure compatibility with index space size
   	status = clEnqueueNDRangeKernel( queue, kernel, 2, NULL, indexSpaceSize, NULL, 0, NULL, NULL );
@@ -93,7 +90,6 @@ int main( int argc, char **argv )
 
     printf( "Transposed matrix (only top-left shown if too large):\n" );
     displayMatrix( hostMatrix, nCols, nRows );
-
 
     //
     // Release all resources.
