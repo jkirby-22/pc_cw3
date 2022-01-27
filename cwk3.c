@@ -62,6 +62,8 @@ int main( int argc, char **argv )
     cl_mem device_oldMatrix = clCreateBuffer( context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, nRows*nCols*sizeof(float), hostMatrix, &status );
   	cl_mem device_newMatrix = clCreateBuffer( context, CL_MEM_WRITE_ONLY, nRows*nCols*sizeof(float), NULL, &status );
 
+    //////// MY CODE START ////////
+
     size_t constant_capacity;
     clGetDeviceInfo ( device, CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE, sizeof ( size_t ), &constant_capacity, NULL );
 
@@ -77,16 +79,22 @@ int main( int argc, char **argv )
       kernel = compileKernelFromFile( "cwk3.cl", "transposeConstant", context, device );
     }
 
+    //////// MY CODE END ////////
+
     //set kernel arguments
     status = clSetKernelArg( kernel, 0, sizeof(cl_mem), &device_oldMatrix );
     status = clSetKernelArg( kernel, 1, sizeof(cl_mem), &device_newMatrix );
     status = clSetKernelArg( kernel, 2, sizeof(int), &nRows );
     status = clSetKernelArg( kernel, 3, sizeof(int), &nCols );
 
+    //////// MY CODE START ////////
+
     size_t indexSpaceSize[2] = {nRows, nCols};
     //let automatic handling of work group size to ensure compatibility with index space size
   	status = clEnqueueNDRangeKernel( queue, kernel, 2, NULL, indexSpaceSize, NULL, 0, NULL, NULL );
     status = clEnqueueReadBuffer( queue, device_newMatrix, CL_TRUE, 0, nRows*nCols*sizeof(float), hostMatrix, 0, NULL, NULL );
+
+    //////// MY CODE END ////////
 
     printf( "Transposed matrix (only top-left shown if too large):\n" );
     displayMatrix( hostMatrix, nCols, nRows );

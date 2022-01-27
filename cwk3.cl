@@ -1,3 +1,4 @@
+//////// MY CODE START ////////
 //kernel if matrix exceeds devices constant capacity
 __kernel
 void transposeGlobal( __global float *oldMatrix, __global float *newMatrix, int nRows, int nCols) //oldMatrix in global, local copy would be faster but we want to keep kernel small
@@ -25,3 +26,4 @@ void transposeConstant( __constant float *oldMatrix, __global float *newMatrix, 
   	newMatrix[(columnIndex * nRows) + rowIndex] = oldMatrix[(rowIndex * nCols) + columnIndex];
 
 }
+//////// MY CODE END ////////
