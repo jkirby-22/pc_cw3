@@ -4,11 +4,11 @@ void transposeGlobal( __global float *oldMatrix, __global float *newMatrix, int 
 {
 	// Store in private variables to optimise multiple access
 	int rowIndex = get_global_id(0);
-  int columnIndex = get_global_id(1);
+  	int columnIndex = get_global_id(1);
 
-  //transpose
+  	//transpose
 	//newMatrix[rowIndex] = rowIndex;
-  newMatrix[(columnIndex * nRows) + rowIndex] = oldMatrix[(rowIndex * nCols) + columnIndex];
+  	newMatrix[(columnIndex * nRows) + rowIndex] = oldMatrix[(rowIndex * nCols) + columnIndex];
 
 }
 
@@ -18,10 +18,10 @@ void transposeConstant( __constant float *oldMatrix, __global float *newMatrix, 
 {
 	// Store in private variables to optimise multiple access
 	int rowIndex = get_global_id(0);
-  int columnIndex = get_global_id(1);
+  	int columnIndex = get_global_id(1);
 
-  //transpose
+  	//transpose
 	//newMatrix[rowIndex] = rowIndex;
-  newMatrix[(columnIndex * nRows) + rowIndex] = oldMatrix[(rowIndex * nCols) + columnIndex];
+  	newMatrix[(columnIndex * nRows) + rowIndex] = oldMatrix[(rowIndex * nCols) + columnIndex];
 
 }
